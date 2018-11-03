@@ -170,6 +170,7 @@ function M(a, b, c, d, i, h, q, r, k) {
         }
     }
 }
+/*N(a), O(a), P(a) decide order of factors*/
 function N(a) {
     if (1 >= a)
         return [];
@@ -196,7 +197,8 @@ function P(a, b) {
         c = "prime";
     else {
         c = "";
-        for (var d = 0; d < b.length; d++) {
+		b.reverse(); //REVERSES
+		for (var d = 0; d < b.length; d++) {
             "" !== c && (c += '<span class="times">&times;</span>');
             var i = b[d];
             c = 4 == i ? c + '2<span class="times">&times;</span>2' : c + i
@@ -246,12 +248,12 @@ function Q() {
       , f = Math.max(f, 0)
       , f = Math.min(f, 1)
       , f = 0.5 - 0.5 * Math.cos(f * x)
-      , g = N(j);
+      , g = N(j).reverse(); //REVERSES
     a = [];
     d = [];
     b = [];
     M(a, d, b, g, 0, m, l, k * (1 - 0.6 / (j + 1)), 0);
-    var w = N(s)
+    var w = N(s).reverse() //REVERSES
       , c = []
       , C = []
       , D = [];
@@ -260,6 +262,7 @@ function Q() {
     m = document.getElementById("status2");
     k.innerHTML = P(j, g);
     m.innerHTML = P(s, w);
+	var isPrime = (1 >= g.length)
     j = 0.7 / (1 - f + f * f);
     k.style.opacity = 0.001 > j * (1 - f) ? 0.001 : 0.999 < j * (1 - f) ? 0.999 : j * (1 - f);
     m.style.opacity = 0.001 > j * f ? 0.001 : 0.999 < j * f ? 0.999 : j * f;
