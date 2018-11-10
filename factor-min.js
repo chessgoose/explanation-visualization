@@ -241,13 +241,16 @@ function Q() {
     a = y.getTime() + 700;
     var j;
     j = Math.max(a / 1E3 | 0, 1);
+	console.log(j);
+	console.log(a);
     var s = j + 1
-      , f = a - 500 - 1E3 * j
+    , f = a - 500 - 1E3 * j
       , f = 3 * (f / 1E3)
       , f = Math.max(f, 0)
       , f = Math.min(f, 1)
       , f = 0.5 - 0.5 * Math.cos(f * x)
       , g = N(j).reverse(); //REVERSES
+	//console.log(f);
     a = [];
     d = [];
     b = [];
@@ -262,14 +265,16 @@ function Q() {
     k.innerHTML = P(j, g);
     m.innerHTML = P(s, w);
 	var isPrime1 = (1 >= g.length)
-    j = 0.7 / (1 - f + f * f);
+	j = 0.7 / (1 - f + f * f);
     k.style.opacity = 0.001 > j * (1 - f) ? 0.001 : 0.999 < j * (1 - f) ? 0.999 : j * (1 - f);
     m.style.opacity = 0.001 > j * f ? 0.001 : 0.999 < j * f ? 0.999 : j * f;
     p.clearRect(0, 0, e, e);
 	if (isPrime1 == false){
 		e = f;
+		console.log(e);
 		j = a.length;
 		g = c.length;
+		console.log(g);
 		s = 1 / j;
 		f = 1 / g;
 		k = 1 - e;

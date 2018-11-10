@@ -1,149 +1,5 @@
-function n() {
-    var a;
-    try {
-        a = parent.document.URL
-    } catch (b) {
-        a = ""
-    }
-    a = a.match(/\?infinity$/) ? 1E100 : 9999500;
-    function c(a, b) {
-        return "undefined" !== typeof a ? a : b
-    }
-    this.d = function() {
-        return (new Date).getTime()
-    }
-    ;
-    this.getTime = function() {
-        var a = this.d() - this.e
-          , a = this.b + this.speed(a)
-          , a = Math.min(a, this.g);
-        return a = Math.max(a, this.h)
-    }
-    ;
-    this.a = function(a) {
-        this.b = this.getTime();
-        this.e = this.d();
-        this.speed = "function" === typeof a ? a : function(b) {
-            return b * a
-        }
-    }
-    ;
-    this.c = function() {
-        return (this.speed(1E3) - this.speed(0)) / 1E3
-    }
-    ;
-    this.f = function() {
-        var a = this.speed;
-        this.a(function(b) {
-            return 4 * a(b)
-        })
-    }
-    ;
-    this.stop = function() {
-        this.a(0)
-    }
-    ;
-    this.i = function(a) {
-        this.b += a
-    }
-    ;
-    this.h = c(0, 0);
-    this.g = c(a, 1E100);
-    this.b = c(0, 0);
-    this.e = this.d();
-    this.speed = function(a) {
-        return a
-    }
-    ;
-    this.a(c(0, 1))
-}
-;window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame || window.oRequestAnimationFrame;
-window.requestAnimationFrame || (window.requestAnimationFrame = function(a) {
-    var b = 0
-      , c = Math.max(0, 16 - b);
-    return window.setTimeout(function() {
-        var c = (new Date).getTime();
-        a(c);
-        b = (new Date).getTime() - c
-    }, c)
-}
-);
 var p, t, u, v, x, y, z;
-function A(a, b, c) {
-    var d = document.getElementById(a)
-      , i = document.createElement("canvas");
-    i.setAttribute("width", 30);
-    i.setAttribute("height", 30);
-    d.appendChild(i);
-    d.onclick = function() {
-        B();
-        document.getElementById(a).className = "on";
-        b()
-    }
-    ;
-    d.onmouseover = function() {
-        this.style.border = "solid 1px rgba(0,0,0,0.1)"
-    }
-    ;
-    d.onmouseout = function() {
-        this.style.border = ""
-    }
-    ;
-    c(i);
-    return d
-}
-function B() {
-    for (var a = document.getElementById("controls").childNodes, b = 0; b < a.length; b++)
-        a[b].className = "off"
-}
-function F(a, b, c, d) {
-    var d = b + 0.85 * c * d
-      , i = 0.5 - c / 2
-      , c = 0.5 + c / 2
-      , h = a.getContext("2d");
-    h.save();
-    h.scale(a.width, a.height);
-    h.beginPath();
-    h.moveTo(b, i);
-    h.lineTo(d, 0.5);
-    h.lineTo(b, c);
-    h.closePath();
-    h.lineJoin = "round";
-    h.fillStyle = "#fff";
-    h.fill();
-    h.lineWidth = 1 / a.width;
-    h.strokeStyle = "rgba(0,0,0,0.2)";
-    h.stroke();
-    h.restore()
-}
-function G(a) {
-    F(a, 0.44, 0.4, -1);
-    F(a, 0.8, 0.4, -1)
-}
-function H(a) {
-    F(a, 0.56, 0.4, 1);
-    F(a, 0.2, 0.4, 1)
-}
-function I(a) {
-    F(a, 0.7, 0.6, -1)
-}
-function J(a) {
-    F(a, 0.3, 0.6, 1)
-}
-function K(a) {
-    var b = a.getContext("2d");
-    b.save();
-    b.scale(a.width, a.height);
-    b.beginPath();
-    b.rect(0.25, 0.25, 0.5, 0.5);
-    b.lineJoin = "round";
-    b.fillStyle = "#fff";
-    b.fill();
-    b.lineWidth = 1 / a.width;
-    b.strokeStyle = "rgba(0,0,0,0.2)";
-    b.stroke();
-    b.restore()
-}
+
 function L(a, b) {
     var c = a * v
       , d = b * v;
@@ -205,7 +61,7 @@ function P(a, b) {
     }
     return '<span class="number">' + a + '</span><br><span class="decomposition">' + c + "</span>"
 }
-function Q() {
+function Q(num) {
     var a, b = 0, c = a = 0, d = 0;
     try {
         b = window.innerWidth
@@ -236,92 +92,108 @@ function Q() {
         a = Math.round(-e / 2) + "px",
         canvas.style.marginLeft = a,
         canvas.style.marginTop = a;
+	console.log(e);
+	console.log(a);
     var m = e / 2
       , l = e / 2;
-    a = y.getTime() + 700;
-    var j;
-    j = Math.max(a / 1E3 | 0, 1);
-    var s = j + 1
-      , f = a - 500 - 1E3 * j
+    var s = num + 1
+	/*f = a - 500 - 1E3 * 1
       , f = 3 * (f / 1E3)
       , f = Math.max(f, 0)
-      , f = Math.min(f, 1)
-      , f = 0.5 - 0.5 * Math.cos(f * x)
-      , g = N(j).reverse(); //REVERSES
+      , f = Math.min(f, 1); */
+	  //we need m
+	f = 0; //transperancy of next one
+	console.log(f);
+    //f = 0.5 - 0.5 * Math.cos(f * Math.PI);
+	//console.log(f);
+    g = N(num).reverse();
+	w = N(s).reverse();
+	console.log("W:" + w);
+	console.log("G:" + g);
+	console.log(f);
     a = [];
     d = [];
     b = [];
-    M(a, d, b, g, 0, m, l, k * (1 - 0.6 / (j + 1)), 0);
-    var w = N(s).reverse() //REVERSES
-      , c = []
+    M(a, d, b, g, 0, m, l, k * (1 - 0.6 / (num + 1)), 0);
+    var c = []
       , C = []
       , D = [];
     M(c, C, D, w, 0, m, l, k * (1 - 0.6 / (s + 1)), 0);
-    k = document.getElementById("status1");
-    m = document.getElementById("status2");
-    k.innerHTML = P(j, g);
-    m.innerHTML = P(s, w);
-	var isPrime1 = (1 >= g.length)
-    j = 0.7 / (1 - f + f * f);
-    k.style.opacity = 0.001 > j * (1 - f) ? 0.001 : 0.999 < j * (1 - f) ? 0.999 : j * (1 - f);
-    m.style.opacity = 0.001 > j * f ? 0.001 : 0.999 < j * f ? 0.999 : j * f;
+	console.log(c.length);
+    k = document.getElementById("status");
+    k.innerHTML = P(num, g);
+	k.style.opacity = 1.0;
+	var isPrime = (1 >= g.length) //Known bug: 4 is prime
     p.clearRect(0, 0, e, e);
-	if (isPrime1 == false){
-		e = f;
-		j = a.length;
-		g = c.length;
-		s = 1 / j;
-		f = 1 / g;
-		k = 1 - e;
+	e = f;
+	console.log(e);
+	j = a.length;
+	console.log(j);
+	g = c.length;
+	console.log(g);
+	s = 1 / j;
+	console.log(s);
+	k = 1 - e;
+	console.log(k);
+	if (isPrime == false || num < 5){
 		for (g -= 1; 0 <= g; g--) {
 			var E;
-			g < j ? (w = k * b[g] + e * D[g],
-			m = k * g * s + e * g * f,
-			l = k * a[g] + e * c[g],
-			E = k * d[g] + e * C[g]) : (w = e * D[g],
+			g < j ? (w = k * b[g],
+			l = k * a[g],
+			m = k * g * s,
+			E = k * d[g]) : (w = 0,
+			l = k * a[j - 1],
 			m = g * f,
-			l = k * a[j - 1] + e * c[g],
-			E = k * d[j - 1] + e * C[g]);
+			E = k * d[j - 1]);
 			p.fillStyle = z[m * z.length | 0];
 			p.beginPath();
 			p.arc(l, E, w, 0, v, !0);
 			p.fill()
 		}
+		console.log(g);
 	} else {
-		/*var randDivisor = Math.random(0, j);
-		var rem = j % randDivisor;
-		var divisor = j / randDivisor;
-		for (var i = 0; i <= randDivisor; i++){
+		var square = Math.floor(Math.sqrt(num));
+		/*for (var i = 0; i <= randDivisor; i++){
 			x = 100 + i * 10;
-			/*\for (var n = 0; n <= divisor; n++){
+			for (var n = 0; n <= divisor; n++){
 				y = 100 + n * 10;
+				m = k * g * s
 				p.fillStyle = z[m * z.length | 0];
 				p.beginPath();
 				p.arc(x, y, 5, 0, v, !0);
 				p.fill()
 			}
+		}*/
+		var rem = num % (square ** 2);
+		var s = 30;
+		var d = 10;
+		console.log(square);
+		console.log(rem);
+		for (var q = 0; q < square; q++){
+			m = k * q * s
+			for (var r = 0; r < square; r++){
+				p.fillStyle = z[m * z.length | 0];
+				p.beginPath();
+				p.arc(100 + (q * s), 100 + (r * s), d, 0, v, !0);
+				p.fill()
+			}
 		}
-		console.log(randDivisor);*/
+		for (var i = 0; i < rem; i++){
+			p.fillStyle = "#FF0000";
+			p.beginPath();
+			p.arc(100 + (square * s), 100 + (i * s), d, 0, v, !0);
+			p.fill();
+		}
 	}
-    window.requestAnimationFrame(Q)
 }
-window.start = function() {
-    canvas = document.getElementById("canvas");
-    if (!canvas.getContext || !canvas.getContext("2d")) {
-        var a = document.getElementById("frame")
-          , b = document.createElement("div");
-        b.setAttribute("id", "error");
-        b.innerHTML = 'To view this visualization, upgrade to a modern web browser like <a href="http://www.google.com/chrome/">Chrome</a>.';
-        a.appendChild(b)
-    } else {
-        p = canvas.getContext("2d");
-        t = Math.PI / 4;
-        u = Math.PI / 2;
-        v = 2 * Math.PI;
-        x = Math.PI;
-        y = new n;
-        for (var a = 1E3, b = [], c = 0, a = 1E3; c < a; c++) {
-            var d = c / a + 0.9
+
+assignColors = function(){
+	t = Math.PI / 4;
+    u = Math.PI / 2;
+    v = 2 * Math.PI;
+    x = Math.PI;
+    for (var a = 1E3, b = [], c = 0, a = 1E3; c < a; c++) {
+        var d = c / a + 0.9
               , i = 766.5 * Math.max(1 / 3 - L(1 / 6, d), 0)
               , h = 766.5 * Math.max(1 / 3 - L(0.5, d), 0)
               , d = 766.5 * Math.max(1 / 3 - L(5 / 6, d), 0)
@@ -330,26 +202,14 @@ window.start = function() {
               , h = Math.round(h * q)
               , d = Math.round(d * q);
             b[c] = "rgb(" + i + "," + h + "," + d + ")"
-        }
-        z = b;
-        A("fast_backward", function() {
-            -2 < y.c() ? y.a(-4) : -100 < y.c() && y.f()
-        }, G);
-        A("play_backward", function() {
-            y.a(-1)
-        }, I);
-        A("stop", function() {
-            y.a(0)
-        }, K);
-        a = A("play_forward", function() {
-            y.a(1)
-        }, J);
-        A("fast_forward", function() {
-            2 > y.c() ? y.a(4) : 100 > y.c() && y.f()
-        }, H);
-        B();
-        a.onclick();
-        window.requestAnimationFrame(Q)
     }
+	z = b;
+};
+
+drawNum = function(){
+    canvas = document.getElementById("canvas");
+	input = document.getElementById("num").value;
+    p = canvas.getContext("2d");
+	Q(parseInt(input));
 }
 ;
