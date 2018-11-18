@@ -236,13 +236,13 @@ function Q() {
         a = Math.round(-e / 2) + "px",
         canvas.style.marginLeft = a,
         canvas.style.marginTop = a;
+	console.log(e);
+	console.log(a);
     var m = e / 2
       , l = e / 2;
     a = y.getTime() + 700;
     var j;
     j = Math.max(a / 1E3 | 0, 1);
-	console.log(j);
-	console.log(a);
     var s = j + 1
     , f = a - 500 - 1E3 * j
       , f = 3 * (f / 1E3)
@@ -271,10 +271,8 @@ function Q() {
     p.clearRect(0, 0, e, e);
 	if (isPrime1 == false){
 		e = f;
-		console.log(e);
 		j = a.length;
 		g = c.length;
-		console.log(g);
 		s = 1 / j;
 		f = 1 / g;
 		k = 1 - e;

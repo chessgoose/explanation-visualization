@@ -62,6 +62,8 @@ function P(a, b) {
     return '<span class="number">' + a + '</span><br><span class="decomposition">' + c + "</span>"
 }
 function Q(num) {
+	g = N(num).reverse();
+	var isPrime = (1 >= g.length) //Known bug: 4 is prime
     var a, b = 0, c = a = 0, d = 0;
     try {
         b = window.innerWidth
@@ -86,102 +88,68 @@ function Q(num) {
       , k = Math.max(k, 50)
       , k = Math.min(k, 600)
       , e = 2 * k + 1;
-    if (e != canvas.width || e != canvas.height)
+    if (e != canvas.width || e != canvas.height) {
         canvas.width = e,
         canvas.height = e,
         a = Math.round(-e / 2) + "px",
         canvas.style.marginLeft = a,
         canvas.style.marginTop = a;
+	}
 	console.log(e);
-	console.log(a);
     var m = e / 2
       , l = e / 2;
-    var s = num + 1
 	/*f = a - 500 - 1E3 * 1
       , f = 3 * (f / 1E3)
       , f = Math.max(f, 0)
       , f = Math.min(f, 1); */
 	  //we need m
 	f = 0; //transperancy of next one
-	console.log(f);
     //f = 0.5 - 0.5 * Math.cos(f * Math.PI);
-	//console.log(f);
-    g = N(num).reverse();
-	w = N(s).reverse();
-	console.log("W:" + w);
-	console.log("G:" + g);
-	console.log(f);
     a = [];
     d = [];
     b = [];
     M(a, d, b, g, 0, m, l, k * (1 - 0.6 / (num + 1)), 0);
-    var c = []
-      , C = []
-      , D = [];
-    M(c, C, D, w, 0, m, l, k * (1 - 0.6 / (s + 1)), 0);
-	console.log(c.length);
     k = document.getElementById("status");
     k.innerHTML = P(num, g);
-	k.style.opacity = 1.0;
-	var isPrime = (1 >= g.length) //Known bug: 4 is prime
     p.clearRect(0, 0, e, e);
 	e = f;
-	console.log(e);
 	j = a.length;
-	console.log(j);
-	g = c.length;
-	console.log(g);
 	s = 1 / j;
-	console.log(s);
-	k = 1 - e;
-	console.log(k);
 	if (isPrime == false || num < 5){
-		for (g -= 1; 0 <= g; g--) {
+		for (j -= 1; 0 <= j; j--) {
 			var E;
-			g < j ? (w = k * b[g],
-			l = k * a[g],
-			m = k * g * s,
-			E = k * d[g]) : (w = 0,
-			l = k * a[j - 1],
-			m = g * f,
-			E = k * d[j - 1]);
+			w = b[j];
+			l = a[j];
+			m = j * s;
+			E = d[j];
 			p.fillStyle = z[m * z.length | 0];
 			p.beginPath();
 			p.arc(l, E, w, 0, v, !0);
 			p.fill()
 		}
-		console.log(g);
 	} else {
+		var n = 5 - (Math.floor(Math.log10(num)));
+		n = (num > 5000) ? 1.5 : n;
+		w = Math.max(b[0], n);
 		var square = Math.floor(Math.sqrt(num));
-		/*for (var i = 0; i <= randDivisor; i++){
-			x = 100 + i * 10;
-			for (var n = 0; n <= divisor; n++){
-				y = 100 + n * 10;
-				m = k * g * s
-				p.fillStyle = z[m * z.length | 0];
-				p.beginPath();
-				p.arc(x, y, 5, 0, v, !0);
-				p.fill()
-			}
-		}*/
+		var s = w * 3;
 		var rem = num % (square ** 2);
-		var s = 30;
-		var d = 10;
-		console.log(square);
-		console.log(rem);
+		var startX = m - (s * square / 2);
+		var startY = l - (s * square / 2);
+		console.log(startX);
+		console.log(startY);
 		for (var q = 0; q < square; q++){
-			m = k * q * s
 			for (var r = 0; r < square; r++){
-				p.fillStyle = z[m * z.length | 0];
+				p.fillStyle = z[r * z.length / square | 0];
 				p.beginPath();
-				p.arc(100 + (q * s), 100 + (r * s), d, 0, v, !0);
+				p.arc(startX + (q * s), startY + (r * s), w, 0, v, !0);
 				p.fill()
 			}
 		}
 		for (var i = 0; i < rem; i++){
 			p.fillStyle = "#FF0000";
 			p.beginPath();
-			p.arc(100 + (square * s), 100 + (i * s), d, 0, v, !0);
+			p.arc(startX + ((square + Math.floor(i / square)) * s), startY + ((i % square) * s), w, 0, v, !0);
 			p.fill();
 		}
 	}
@@ -207,9 +175,16 @@ assignColors = function(){
 };
 
 drawNum = function(){
+	box = document.getElementById("num")
     canvas = document.getElementById("canvas");
-	input = document.getElementById("num").value;
+	input = box.value;
     p = canvas.getContext("2d");
-	Q(parseInt(input));
+	number = parseInt(input);
+	if (!isNaN(input) && input <= 10000){
+		Q(parseInt(input));
+	} else {
+		box.value = "";
+		box.placeholder = "NaN or > 10K";
+	}
 }
 ;
