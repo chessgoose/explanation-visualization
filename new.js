@@ -1,4 +1,4 @@
-var p, t, u, v, x, y, z;
+var p, t, u, v, x, y, z, primes;
 
 function L(a, b) {
     var c = a * v
@@ -61,9 +61,13 @@ function P(a, b) {
     }
     return '<span class="number">' + a + '</span><br><span class="decomposition">' + c + "</span>"
 }
+
+var prevPrime, prevPrimeW, prevPrimeH;
+	
 function Q(num) {
 	g = N(num).reverse();
 	var isPrime = (1 >= g.length) //Known bug: 4 is prime
+	var mode = 1; //0 is new visualization, 1 is old new visualization
     var a, b = 0, c = a = 0, d = 0;
     try {
         b = window.innerWidth
@@ -88,34 +92,55 @@ function Q(num) {
       , k = Math.max(k, 50)
       , k = Math.min(k, 600)
       , e = 2 * k + 1;
-    if (e != canvas.width || e != canvas.height) {
-        canvas.width = e,
-        canvas.height = e,
-        a = Math.round(-e / 2) + "px",
-        canvas.style.marginLeft = a,
-        canvas.style.marginTop = a;
+	var height = (isPrime && num >= 5) ? 6 : 5;
+	var margin = Math.round(-e / 2) + "px";
+	var primeHeight = e;
+	var primeWidth = Math.max(e, window.innerWidth - e);
+	var marginthing = (num > 150) ? -e : (primeWidth - window.innerWidth)/2;
+	var primeMargin = marginthing + "px";
+	if (mode == 0 || isPrime == false){
+		if (e != canvas.width || e != canvas.height) {
+			canvas.width = e,
+			canvas.height = e,
+			a = margin,
+			canvas.style.marginLeft = a,
+			canvas.style.marginTop = a;
+		}
+	} else {
+		if (primeWidth != canvas.width || primeHeight != canvas.height || primeMargin != canvas.style.marginLeft) {
+			canvas.width = primeWidth;
+			canvas.height = primeHeight;
+			canvas.style.marginLeft = primeMargin;
+			canvas.style.marginTop = margin;
+		}
 	}
-	console.log(e);
-    var m = e / 2
-      , l = e / 2;
-	/*f = a - 500 - 1E3 * 1
-      , f = 3 * (f / 1E3)
-      , f = Math.max(f, 0)
-      , f = Math.min(f, 1); */
-	  //we need m
-	f = 0; //transperancy of next one
-    //f = 0.5 - 0.5 * Math.cos(f * Math.PI);
+	var m, l;
+	if (mode == 0 || isPrime == false){
+		m = e / 2,
+		l = e / 2;
+	} else {
+		m = primeHeight / 2;
+		l = primeWidth / 2;
+	}
     a = [];
     d = [];
     b = [];
-    M(a, d, b, g, 0, m, l, k * (1 - 0.6 / (num + 1)), 0);
+	primes = [];
+	M(a, d, b, g, 0, m, l, k * (1 - 0.6 / (num + 1)), 0);
+	if (isPrime == true){
+		primes = primeCombos(num);
+		console.log(primes);
+	}
     k = document.getElementById("status");
     k.innerHTML = P(num, g);
-    p.clearRect(0, 0, e, e);
-	e = f;
+	if (mode == 1 && prevPrime == true) {
+		p.clearRect(0, 0, prevPrimeW, prevPrimeH);
+	} else{
+		p.clearRect(0, 0, e, e);
+	}
 	j = a.length;
 	s = 1 / j;
-	if (isPrime == false || num < 5){
+	if (isPrime == false || num <= 10){
 		for (j -= 1; 0 <= j; j--) {
 			var E;
 			w = b[j];
@@ -127,32 +152,76 @@ function Q(num) {
 			p.arc(l, E, w, 0, v, !0);
 			p.fill()
 		}
+		prevPrime = false;
 	} else {
-		var n = 5 - (Math.floor(Math.log10(num)));
-		n = (num > 5000) ? 1.5 : n;
-		w = Math.max(b[0], n);
-		var square = Math.floor(Math.sqrt(num));
-		var s = w * 3;
-		var rem = num % (square ** 2);
-		var startX = m - (s * square / 2);
-		var startY = l - (s * square / 2);
-		console.log(startX);
-		console.log(startY);
-		for (var q = 0; q < square; q++){
-			for (var r = 0; r < square; r++){
-				p.fillStyle = z[r * z.length / square | 0];
+		prevPrime = true;
+		prevPrimeH = primeHeight;
+		prevPrimeW = primeWidth;
+		if (mode == 0){
+			var n = 5 - (Math.floor(Math.log10(num)));
+			n = (num > 5000) ? 1.5 : n;
+			w = Math.max(b[0], n);
+			var square = Math.floor(Math.sqrt(num));
+			var s = w * 3;
+			var rem = num % (square ** 2);
+			var startX = m - (s * square / 2);
+			var startY = l - (s * square / 2);
+			console.log(startX);
+			console.log(startY);
+			for (var q = 0; q < square; q++){
+				for (var r = 0; r < square; r++){
+					p.fillStyle = z[r * z.length / square | 0];
+					p.beginPath();
+					p.arc(startX + (q * s), startY + (r * s), w, 0, v, !0);
+					p.fill();
+				}
+			}
+			for (var i = 0; i < rem; i++){
+				p.fillStyle = "#FF0000";
 				p.beginPath();
-				p.arc(startX + (q * s), startY + (r * s), w, 0, v, !0);
-				p.fill()
+				p.arc(startX + ((square + Math.floor(i / square)) * s), startY + ((i % square) * s), w, 0, v, !0);
+				p.fill();
+			}
+		} else {
+			//var n = 5 - (Math.floor(Math.log10(num)));
+			//n = (num > 5000) ? 1.5 : n;
+			var rectX = 10, rectY = 10;
+			var w = Math.floor((primeHeight)/(3 * primes[0][1])); //replace w/ 3?
+			var s = w * 3;
+			//Run time - O(n^3 + n^2) (not big deal though since #s small)
+			for (var i = 0; i < primes.length; i++){
+				for (var q = 0; q < primes[i][0]; q++){
+					for (var r = 0; r < primes[i][1]; r++){
+						p.fillStyle = z[q * z.length / primes[i][0] | 0];
+						p.beginPath();
+						p.arc(rectX + (q * s), rectY + (r * s), w, 0, v, !0);
+						p.fill();
+					}
+				}
+				for (var x = 0; x < primes[i][2]; x++){
+					p.fillStyle = "#FF0000";
+					p.beginPath();
+					p.arc(rectX + (primes[i][0] * s), rectY + (x * s), w, 0, v, !0);
+					p.fill();
+				}
+				
+				rectX = rectX + (primes[i][0] + 2) * s;
 			}
 		}
-		for (var i = 0; i < rem; i++){
-			p.fillStyle = "#FF0000";
-			p.beginPath();
-			p.arc(startX + ((square + Math.floor(i / square)) * s), startY + ((i % square) * s), w, 0, v, !0);
-			p.fill();
-		}
 	}
+}
+
+primeCombos = function(num){
+	var primes = [];
+	var d = 2;
+	while (d*d <= num){        
+		var q = Math.floor(num / d);
+		var r = num % d;
+		var combo = [d, q, r];
+		primes.push(combo);
+		d++;
+	}
+	return primes;
 }
 
 assignColors = function(){
