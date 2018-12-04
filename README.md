@@ -1,8 +1,18 @@
 # Explanation-Visualization Project
 
-This code is for a project for an internship at NCSA. The goal is to visualize factorization diagrams of numbers.
+This code is for a project as part of the SPIN (Students Pushing Innovation) internship at NCSA (National Center for Supercomputing Applications). The goal of this portion of the project is to visualize elementary primality proofs of numbers.
 
-### Tasks:
-* Get code from website to run (DONE)
-* Reverse order factorization and diagrams are displayed (DONE)
-* Develop display style “R = P mod D”, where the remainder R is shown in red, and the divisor D runs from 2 to D_max = ceiling(sqrt(R)), and visually prove that this works - (done w/ only square version - need to add room for > 1 rectangle visualization?)
+### To-Do Tasks:
+* Potentially animate the diagrams again?
+
+### Credits
+All code not stated here was all my own work.
+The composite factorization diagrams were based on code from Stephen Von Worley's [Animated Factorization Diagrams].
+I used code from the D3 JavaScript library for the canvas zooming-in functionality [D3 Zoom].
+
+None of this code will be used for commercial benefit, and I will set up a license potentially.
+
+[Animated Factorization Diagrams]: http://www.datapointed.net/visualizations/math/factorization/animated-diagrams/
+[D3 Zoom]: https://github.com/d3/d3-zoom 
+
+

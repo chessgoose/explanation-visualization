@@ -1,4 +1,4 @@
-var p, t, u, v, x, y, z;
+var p, t, u, v, x, y, z, primes;
 
 function L(a, b) {
     var c = a * v
@@ -61,9 +61,43 @@ function P(a, b) {
     }
     return '<span class="number">' + a + '</span><br><span class="decomposition">' + c + "</span>"
 }
+
+var primes = [];
+var mode = 1; //0 is w/o text, 2 is w/ old text, 1 is w/ new text
+
+primeCombos = function(num){
+	var d = 2;
+	while (d*d <= num){        
+		var q = Math.floor(num / d);
+		var r = num % d;
+		var combo = [d, q, r];
+		primes.push(combo);
+		d++;
+	}
+	if (mode == 1){
+		var finalQ = Math.floor(num / d);
+		var finalR = num % d;
+		var combo = [d, finalQ, finalR];
+		primes.push(combo);
+	}
+	return primes;
+}
+
+var width, height;
+var primeWidth, primeHeight;
+var e;
+var currNum;
+var isPrime;
+var primeVis = false;
+var m, l;
+var k;
+var pRad;
+
 function Q(num) {
-	g = N(num).reverse();
-	var isPrime = (1 >= g.length) //Known bug: 4 is prime
+	currNum = num;
+	g = N(num);
+	isPrime = (1 >= g.length) //Known bug: 4 is prime
+	primeVis = (isPrime == true && num > 10);
     var a, b = 0, c = a = 0, d = 0;
     try {
         b = window.innerWidth
@@ -84,38 +118,69 @@ function Q(num) {
     a || (a = 718);
     a = Math.min(b, a);
     a = Math.max(a, 350);
-    var k = Math.round(0.45 * (a - 90))
+    k = Math.round(0.45 * (a - 90))
       , k = Math.max(k, 50)
       , k = Math.min(k, 600)
       , e = 2 * k + 1;
-    if (e != canvas.width || e != canvas.height) {
-        canvas.width = e,
-        canvas.height = e,
-        a = Math.round(-e / 2) + "px",
-        canvas.style.marginLeft = a,
-        canvas.style.marginTop = a;
+	var margin = Math.round(-e / 2) + "px";
+	var maxRadius;
+	if (primeVis){
+		primes = [];
+		primes = primeCombos(num);
+		primeHeight = window.innerHeight - 70;
+		primeWidth = window.innerWidth - 50;
+		var total = 0;
+		for (var i = 0; i < primes.length; i++){
+			total += (primes[i][0] + 2);
+		}
+		total = total - 1;
+		console.log(primes);
+		console.log(total);
+		pRad = (primeWidth - 200)/total;
+		pRad = Math.min(pRad, (primeHeight - 50)/(primes[0][1]));
+		maxWidth = 50 + (total * pRad);
+		primeWidth = Math.min(maxWidth, primeWidth);
+		var marginthing = -(primeWidth)/2;
+		var phmargin = -(primeHeight)/2;
+		var pwmargin = -(primeWidth)/2;
 	}
-	console.log(e);
-    var m = e / 2
-      , l = e / 2;
-	/*f = a - 500 - 1E3 * 1
-      , f = 3 * (f / 1E3)
-      , f = Math.max(f, 0)
-      , f = Math.min(f, 1); */
-	  //we need m
-	f = 0; //transperancy of next one
-    //f = 0.5 - 0.5 * Math.cos(f * Math.PI);
-    a = [];
+	if (!primeVis){
+		if (e != canvas.width || e != canvas.height) {
+			canvas.width = e,
+			canvas.height = e,
+			a = margin,
+			canvas.style.marginLeft = a,
+			canvas.style.marginTop = a;
+			width = e;
+			height = e;
+		}
+	} else {
+		if (primeWidth != canvas.width || primeHeight != canvas.height) {
+			canvas.width = primeWidth;
+			canvas.height = primeHeight;
+			canvas.style.marginLeft = pwmargin + "px";
+			canvas.style.marginTop = phmargin + "px";
+			height = primeHeight;
+			width = primeWidth;
+		}
+	}
+	m = height/2, l = width/2;
+	drawCanvas(currNum);
+}
+
+drawCanvas = function(num){
+	a = [];
     d = [];
     b = [];
-    M(a, d, b, g, 0, m, l, k * (1 - 0.6 / (num + 1)), 0);
-    k = document.getElementById("status");
-    k.innerHTML = P(num, g);
-    p.clearRect(0, 0, e, e);
-	e = f;
+	if (!primeVis){
+		M(a, d, b, g, 0, m, l, k * (1 - 0.6 / (num + 1)), 0);
+	}
+	factorization = document.getElementById("status");
+    factorization.innerHTML = P(num, g);
+	p.clearRect(0, 0, width, height);
 	j = a.length;
 	s = 1 / j;
-	if (isPrime == false || num < 5){
+	if (!primeVis){
 		for (j -= 1; 0 <= j; j--) {
 			var E;
 			w = b[j];
@@ -125,32 +190,46 @@ function Q(num) {
 			p.fillStyle = z[m * z.length | 0];
 			p.beginPath();
 			p.arc(l, E, w, 0, v, !0);
-			p.fill()
+			p.fill();
 		}
 	} else {
-		var n = 5 - (Math.floor(Math.log10(num)));
-		n = (num > 5000) ? 1.5 : n;
-		w = Math.max(b[0], n);
-		var square = Math.floor(Math.sqrt(num));
+		//var w = (primeHeight * 0.9)/( 3* primes[0][1]);
+		var w = pRad / 3;
+		var rectX = 30, rectY = w * 2;		//replace w/ 3?, note that for large # cut off
 		var s = w * 3;
-		var rem = num % (square ** 2);
-		var startX = m - (s * square / 2);
-		var startY = l - (s * square / 2);
-		console.log(startX);
-		console.log(startY);
-		for (var q = 0; q < square; q++){
-			for (var r = 0; r < square; r++){
-				p.fillStyle = z[r * z.length / square | 0];
-				p.beginPath();
-				p.arc(startX + (q * s), startY + (r * s), w, 0, v, !0);
-				p.fill()
+		var size;
+		size = 25 - Math.sqrt(num * 0.95);
+		p.font = size + "px Arial";
+		var textHeight = p.measureText('M').width;
+		//Run time - O(n^3 + n^2) (slow for large #s)
+		for (var i = 0; i < primes.length; i++){
+			for (var q = 0; q < primes[i][0]; q++){
+				for (var r = 0; r < primes[i][1]; r++){
+					p.fillStyle = z[q * z.length / primes[i][0] | 0];
+					p.beginPath();
+					p.arc(rectX + (q * s), rectY + (r * s), w, 0, v, !0);
+					p.fill();
+					p.closePath();
+				}
 			}
-		}
-		for (var i = 0; i < rem; i++){
-			p.fillStyle = "#FF0000";
-			p.beginPath();
-			p.arc(startX + ((square + Math.floor(i / square)) * s), startY + ((i % square) * s), w, 0, v, !0);
-			p.fill();
+			if (mode != 0 && num < 500){
+				p.fillStyle = "gray";
+				p.textAlign = "center";
+				if (mode == 1){
+					var sumText = primes[i][0] + "×" + primes[i][1] + " + " + primes[i][2];
+					p.fillText(sumText, (rectX + ((primes[i][0] - 1) * s / 2)),(rectY + (primes[i][1] - 1) * s + 2 * w + textHeight));
+				} else {
+					p.fillText(primes[i][0] + "×" + primes[i][1], (rectX + ((primes[i][0] - 1) * s / 2)),(rectY + (primes[i][1] - 1) * s + 2 * w + 10));
+				}
+			}
+			for (var x = 0; x < primes[i][2]; x++){
+				p.fillStyle = "#FF0000";
+				p.beginPath();
+				p.arc(rectX + (primes[i][0] * s), rectY + (x * s), w, 0, v, !0);
+				p.fill();
+				p.closePath();
+			}
+			rectX = rectX + (primes[i][0] + 2) * s;
 		}
 	}
 }
@@ -175,16 +254,20 @@ assignColors = function(){
 };
 
 drawNum = function(){
-	box = document.getElementById("num")
-    canvas = document.getElementById("canvas");
+	box = document.getElementById("num");
 	input = box.value;
+	canvas = document.getElementById("canvas");
     p = canvas.getContext("2d");
 	number = parseInt(input);
 	if (!isNaN(input) && input <= 10000){
+		if (input > 1000 && isPrime == true){
+			box.value = "Prime renderings are slow for large #s";
+		}
 		Q(parseInt(input));
 	} else {
 		box.value = "";
 		box.placeholder = "NaN or > 10K";
-	}
-}
-;
+	}	
+};
+
+    
