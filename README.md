@@ -4,7 +4,6 @@ This code is for a project as part of the SPIN (Students Pushing Innovation) int
 
 ### To-Do Tasks:
 * Potentially animate the diagrams again?
-* Clean up the code and diagrams
 
 ### Credits
 All code not stated here was all my own work.

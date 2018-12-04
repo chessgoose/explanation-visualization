@@ -62,9 +62,8 @@ function P(a, b) {
     return '<span class="number">' + a + '</span><br><span class="decomposition">' + c + "</span>"
 }
 
-var prevPrime, prevPrimeW, prevPrimeH;
-
 var primes = [];
+var mode = 1; //0 is w/o text, 2 is w/ old text, 1 is w/ new text
 
 primeCombos = function(num){
 	var d = 2;
@@ -75,22 +74,30 @@ primeCombos = function(num){
 		primes.push(combo);
 		d++;
 	}
+	if (mode == 1){
+		var finalQ = Math.floor(num / d);
+		var finalR = num % d;
+		var combo = [d, finalQ, finalR];
+		primes.push(combo);
+	}
 	return primes;
 }
 
 var width, height;
 var primeWidth, primeHeight;
-var mode = 1; //0 is w/o text, 1 is w/ text (WIP), 2 is w/ text and zooming in
 var e;
 var currNum;
 var isPrime;
+var primeVis = false;
 var m, l;
- var k; 
+var k;
+var pRad;
 
 function Q(num) {
 	currNum = num;
-	g = N(num).reverse();
+	g = N(num);
 	isPrime = (1 >= g.length) //Known bug: 4 is prime
+	primeVis = (isPrime == true && num > 10);
     var a, b = 0, c = a = 0, d = 0;
     try {
         b = window.innerWidth
@@ -116,23 +123,28 @@ function Q(num) {
       , k = Math.min(k, 600)
       , e = 2 * k + 1;
 	var margin = Math.round(-e / 2) + "px";
-	primeHeight = window.innerHeight - 70;
-	primeWidth = window.innerWidth - 50;
-	var maxWidth = 20;
-	primes = [];
-	if (isPrime == true && num > 10){
+	var maxRadius;
+	if (primeVis){
+		primes = [];
 		primes = primeCombos(num);
-		console.log(primes);
+		primeHeight = window.innerHeight - 70;
+		primeWidth = window.innerWidth - 50;
+		var total = 0;
 		for (var i = 0; i < primes.length; i++){
-			maxWidth = maxWidth + (primes[i][0] + 2) * (primeHeight - 50)/(primes[0][1]);
+			total += (primes[i][0] + 2);
 		}
-		maxWidth = maxWidth - (primeHeight - 50)/(primes[0][1]);
+		total = total - 1;
+		console.log(primes);
+		console.log(total);
+		pRad = (primeWidth - 200)/total;
+		pRad = Math.min(pRad, (primeHeight - 50)/(primes[0][1]));
+		maxWidth = 50 + (total * pRad);
 		primeWidth = Math.min(maxWidth, primeWidth);
+		var marginthing = -(primeWidth)/2;
+		var phmargin = -(primeHeight)/2;
+		var pwmargin = -(primeWidth)/2;
 	}
-	var marginthing = -(primeWidth)/2;
-	var phmargin = -(primeHeight)/2;
-	var pwmargin = -(primeWidth)/2;
-	if (isPrime == false || num < 10){
+	if (!primeVis){
 		if (e != canvas.width || e != canvas.height) {
 			canvas.width = e,
 			canvas.height = e,
@@ -152,13 +164,7 @@ function Q(num) {
 			width = primeWidth;
 		}
 	}
-	if (isPrime == false || num < 10){
-		m = e / 2,
-		l = e / 2;
-	} else {
-		m = primeHeight / 2;
-		l = primeWidth / 2;
-	}
+	m = height/2, l = width/2;
 	drawCanvas(currNum);
 }
 
@@ -166,14 +172,15 @@ drawCanvas = function(num){
 	a = [];
     d = [];
     b = [];
-	if (isPrime == false || num <= 10){
+	if (!primeVis){
 		M(a, d, b, g, 0, m, l, k * (1 - 0.6 / (num + 1)), 0);
 	}
-	k = document.getElementById("status");
-    k.innerHTML = P(num, g);
+	factorization = document.getElementById("status");
+    factorization.innerHTML = P(num, g);
+	p.clearRect(0, 0, width, height);
 	j = a.length;
 	s = 1 / j;
-	if (isPrime == false || num <= 10){
+	if (!primeVis){
 		for (j -= 1; 0 <= j; j--) {
 			var E;
 			w = b[j];
@@ -183,19 +190,18 @@ drawCanvas = function(num){
 			p.fillStyle = z[m * z.length | 0];
 			p.beginPath();
 			p.arc(l, E, w, 0, v, !0);
-			p.fill()
+			p.fill();
 		}
-		prevPrime = false;
 	} else {
-		prevPrime = true;
-		prevPrimeH = primeHeight;
-		prevPrimeW = primeWidth;
-		//var n = 5 - (Math.floor(Math.log10(num)));
-		//n = (num > 5000) ? 1.5 : n;
-		var w = (primeHeight * 0.9)/( 3* primes[0][1]);
-		var rectX = w * 2, rectY = w * 2;		//replace w/ 3?, note that for large # cut off
+		//var w = (primeHeight * 0.9)/( 3* primes[0][1]);
+		var w = pRad / 3;
+		var rectX = 30, rectY = w * 2;		//replace w/ 3?, note that for large # cut off
 		var s = w * 3;
-		//Run time - O(n^3 + n^2) (not big deal though since #s small)
+		var size;
+		size = 25 - Math.sqrt(num * 0.95);
+		p.font = size + "px Arial";
+		var textHeight = p.measureText('M').width;
+		//Run time - O(n^3 + n^2) (slow for large #s)
 		for (var i = 0; i < primes.length; i++){
 			for (var q = 0; q < primes[i][0]; q++){
 				for (var r = 0; r < primes[i][1]; r++){
@@ -207,16 +213,14 @@ drawCanvas = function(num){
 				}
 			}
 			if (mode != 0 && num < 500){
-				var size;
-				if (size > 200){
-					size = 25 - (num * 0.04);
-				} else {
-					size = 25 - (num * 0.08);
-				}
-				p.font = size + "px Arial";
 				p.fillStyle = "gray";
 				p.textAlign = "center";
-				p.fillText(primes[i][0] + " x " + primes[i][1], (rectX + ((primes[i][0] - 1) * s / 2)),(rectY + (primes[i][1] - 1) * s + 2 * w + 10));
+				if (mode == 1){
+					var sumText = primes[i][0] + "×" + primes[i][1] + " + " + primes[i][2];
+					p.fillText(sumText, (rectX + ((primes[i][0] - 1) * s / 2)),(rectY + (primes[i][1] - 1) * s + 2 * w + textHeight));
+				} else {
+					p.fillText(primes[i][0] + "×" + primes[i][1], (rectX + ((primes[i][0] - 1) * s / 2)),(rectY + (primes[i][1] - 1) * s + 2 * w + 10));
+				}
 			}
 			for (var x = 0; x < primes[i][2]; x++){
 				p.fillStyle = "#FF0000";
@@ -257,7 +261,7 @@ drawNum = function(){
 	number = parseInt(input);
 	if (!isNaN(input) && input <= 10000){
 		if (input > 1000 && isPrime == true){
-			box.value = "There is no zoom for large #s, and rendering extremely slow";
+			box.value = "Prime renderings are slow for large #s";
 		}
 		Q(parseInt(input));
 	} else {
@@ -265,46 +269,5 @@ drawNum = function(){
 		box.placeholder = "NaN or > 10K";
 	}	
 };
-
-/*document.addEventListener('DOMContentLoaded',domloaded,false);
-function domloaded(){
-	canvas.addEventListener('wheel',function(event){
-    event.preventDefault();
-    // Get mouse offset.
-	
-	if (isPrime == true && currNum < 1000){
-    var mousex = event.clientX - canvas.offsetLeft;
-    var mousey = event.clientY - canvas.offsetTop;
-    // Normalize wheel to +1 or -1.
-    var wheel = event.wheelDelta/120;
-	
-    // Compute zoom factor.
-    var zoom = Math.exp(wheel*zoomIntensity);
-    
-	drawCanvas(currNum);
-    // Translate so the visible origin is at the context's origin.
-    p.translate(originx, originy);
-  
-    // Compute the new visible origin. Originally the mouse is at a
-    // distance mouse/scale from the corner, we want the point under
-    // the mouse to remain in the same place after the zoom, but this
-    // is at mouse/new_scale away from the corner. Therefore we need to
-    // shift the origin (coordinates of the corner) to account for this.
-    originx -= mousex/(scale*zoom) - mousex/scale;
-    originy -= mousey/(scale*zoom) - mousey/scale;
-    
-    // Scale it (centered around the origin due to the trasnslate above).
-    p.scale(zoom, zoom);
-    // Offset the visible origin to it's proper position.
-    p.translate(-originx, -originy);
-
-    // Update scale and others.
-    scale *= zoom;
-    visibleWidth = width / scale;
-    visibleHeight = height / scale;
-	}
-	return false;
-}, false);
-}*/
 
     
