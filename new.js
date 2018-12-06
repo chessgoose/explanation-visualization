@@ -63,7 +63,6 @@ function P(a, b) {
 }
 
 var primes = [];
-var mode = 1; //0 is w/o text, 2 is w/ old text, 1 is w/ new text
 
 primeCombos = function(num){
 	var d = 2;
@@ -123,7 +122,6 @@ function Q(num) {
       , k = Math.min(k, 600)
       , e = 2 * k + 1;
 	var margin = Math.round(-e / 2) + "px";
-	var maxRadius;
 	if (primeVis){
 		primes = [];
 		primes = primeCombos(num);
@@ -134,11 +132,9 @@ function Q(num) {
 			total += (primes[i][0] + 2);
 		}
 		total = total - 1;
-		console.log(primes);
-		console.log(total);
 		pRad = (primeWidth - 200)/total;
 		pRad = Math.min(pRad, (primeHeight - 50)/(primes[0][1]));
-		maxWidth = 50 + (total * pRad);
+		maxWidth = (total * pRad) + 50;//change to + 50
 		primeWidth = Math.min(maxWidth, primeWidth);
 		var marginthing = -(primeWidth)/2;
 		var phmargin = -(primeHeight)/2;
@@ -193,12 +189,10 @@ drawCanvas = function(num){
 			p.fill();
 		}
 	} else {
-		//var w = (primeHeight * 0.9)/( 3* primes[0][1]);
 		var w = pRad / 3;
-		var rectX = 30, rectY = w * 2;		//replace w/ 3?, note that for large # cut off
-		var s = w * 3;
-		var size;
-		size = 25 - Math.sqrt(num * 0.95);
+		var rectX = 30, rectY = w * 2;	
+		var s = pRad;
+		var size = 25 - Math.sqrt(num * 0.95);
 		p.font = size + "px Arial";
 		var textHeight = p.measureText('M').width;
 		//Run time - O(n^3 + n^2) (slow for large #s)
@@ -212,15 +206,11 @@ drawCanvas = function(num){
 					p.closePath();
 				}
 			}
-			if (mode != 0 && num < 500){
+			if (num < 500){
 				p.fillStyle = "gray";
 				p.textAlign = "center";
-				if (mode == 1){
-					var sumText = primes[i][0] + "×" + primes[i][1] + " + " + primes[i][2];
-					p.fillText(sumText, (rectX + ((primes[i][0] - 1) * s / 2)),(rectY + (primes[i][1] - 1) * s + 2 * w + textHeight));
-				} else {
-					p.fillText(primes[i][0] + "×" + primes[i][1], (rectX + ((primes[i][0] - 1) * s / 2)),(rectY + (primes[i][1] - 1) * s + 2 * w + 10));
-				}
+				var sumText = primes[i][0] + "×" + primes[i][1] + " + " + primes[i][2];
+				p.fillText(sumText, (rectX + ((primes[i][0] - 1) * s / 2)),(rectY + (primes[i][1] - 1) * s + 2 * w + textHeight));
 			}
 			for (var x = 0; x < primes[i][2]; x++){
 				p.fillStyle = "#FF0000";
@@ -269,5 +259,14 @@ drawNum = function(){
 		box.placeholder = "NaN or > 10K";
 	}	
 };
+
+exportPDF = function(){
+	if (currNum){
+		var pdf = new jsPDF();
+		var imgData = canvas.toDataURL("image/png", 1.0);
+		pdf.addImage(imgData, 'PNG', 10, 10);
+		pdf.save(currNum + "-visualization.pdf");
+	}
+}
 
     

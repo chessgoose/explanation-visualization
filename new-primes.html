@@ -16,8 +16,13 @@
 <div id="credits">
 Based on <a href="http://www.datapointed.net/2012/10/animated-factorization-diagrams/"  onclick="window.open(this.href);return false;">Animated Factorization Diagrams</a>
 </div>
+<button id="cexport" onclick="exportPDF()">Export as PDF </button>
+<div>
+</div>
 <!--Zooming Code From D3JS -->
 <script src="https://d3js.org/d3.v4.min.js"></script>
+<!--Generate PDF from jsPDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.3/jspdf.min.js"></script>
 <script>
 assignColors();
 document.querySelector('#num').addEventListener('keypress', function (e) {
@@ -43,5 +48,4 @@ document.querySelector('#num').addEventListener('keypress', function (e) {
 	  drawCanvas(currNum);
 	  p.restore();
 	}
-//}
 </script>
