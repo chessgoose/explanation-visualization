@@ -73,12 +73,10 @@ primeCombos = function(num){
 		primes.push(combo);
 		d++;
 	}
-	if (mode == 1){
-		var finalQ = Math.floor(num / d);
-		var finalR = num % d;
-		var combo = [d, finalQ, finalR];
-		primes.push(combo);
-	}
+	var finalQ = Math.floor(num / d);
+	var finalR = num % d;
+	var combo = [d, finalQ, finalR];
+	primes.push(combo);
 	return primes;
 }
 
@@ -262,9 +260,13 @@ drawNum = function(){
 
 exportPDF = function(){
 	if (currNum){
-		var pdf = new jsPDF();
+		var pdf = new jsPDF("p", "mm", "a4");
+		var pwidth = pdf.internal.pageSize.getWidth() - 20;
+		var imgw = Math.min(pwidth, width);
+		var pheight = pdf.internal.pageSize.getHeight();
+		var hratio = Math.min(height/width, 1);
 		var imgData = canvas.toDataURL("image/png", 1.0);
-		pdf.addImage(imgData, 'PNG', 10, 10);
+		pdf.addImage(imgData, 'PNG', 10, 10, imgw, hratio * height);
 		pdf.save(currNum + "-visualization.pdf");
 	}
 }
