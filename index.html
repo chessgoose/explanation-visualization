@@ -6,23 +6,22 @@
 <title>Simple Factorization Diagrams</title>
 <link rel="stylesheet" href="factor.css">
 <script type="text/javascript" src="new.js"></script>
-
-<div>
-	<label for="uname">Number</label>
-    <input type="text" id="num" placeholder="Enter a number from 1 to 10000" style="width: 250px" />
-	<div id="status"></div>
-</div>
-<canvas width="300" height="300" id="canvas"></canvas>
-<div id="credits">
-Based on <a href="http://www.datapointed.net/2012/10/animated-factorization-diagrams/"  onclick="window.open(this.href);return false;">Animated Factorization Diagrams</a>
-</div>
-<button id="cexport" onclick="exportPDF()">Export as PDF </button>
-<div>
-</div>
+<body>
+	<div>
+		<label for="uname">Number</label>
+		<input type="text" id="num" placeholder="Enter a number from 1 to 10000" style="width: 250px" />
+		<div id="status"></div>
+	</div>
+	<canvas width="300" height="300" id="canvas"></canvas>
+	<div id="credits">
+	Based on <a href="http://www.datapointed.net/2012/10/animated-factorization-diagrams/"  onclick="window.open(this.href);return false;">Animated Factorization Diagrams</a>
+	</div>
+	<button id="cexport" onclick="exportPDF()">Export as PDF </button>
+</body>
 <!--Zooming Code From D3JS -->
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <!--Generate PDF from jsPDF -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.3/jspdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.4.1/jspdf.min.js"></script>
 <script>
 assignColors();
 document.querySelector('#num').addEventListener('keypress', function (e) {

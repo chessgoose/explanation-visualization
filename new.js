@@ -260,14 +260,14 @@ drawNum = function(){
 
 exportPDF = function(){
 	if (currNum){
-		var pdf = new jsPDF("p", "mm", "a4");
-		var pwidth = pdf.internal.pageSize.getWidth() - 20;
+		var doc = new jsPDF("p", "mm", "a4");
+		var pwidth = doc.internal.pageSize.getWidth();
 		var imgw = Math.min(pwidth, width);
-		var pheight = pdf.internal.pageSize.getHeight();
-		var hratio = Math.min(height/width, 1);
+		var pheight = doc.internal.pageSize.getHeight();
+		var h = Math.min((height/width) * pwidth, height);
 		var imgData = canvas.toDataURL("image/png", 1.0);
-		pdf.addImage(imgData, 'PNG', 10, 10, imgw, hratio * height);
-		pdf.save(currNum + "-visualization.pdf");
+		doc.addImage(imgData, 'PNG', 10, 10, imgw - 10, h);
+		doc.save(currNum + "-visualization.pdf");
 	}
 }
 
