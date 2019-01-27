@@ -64,9 +64,9 @@ function P(a, b) {
 
 var primes = [];
 
-primeCombos = function(num){
+primeCombos = function(num, mode){
 	var d = 2;
-	while (d*d <= num){        
+	while (d < (num - 1)){        
 		var q = Math.floor(num / d);
 		var r = num % d;
 		var combo = [d, q, r];
@@ -89,6 +89,8 @@ var primeVis = false;
 var m, l;
 var k;
 var pRad;
+var mode = 2;
+var knownPrimes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43];
 
 function Q(num) {
 	currNum = num;
@@ -126,8 +128,24 @@ function Q(num) {
 		primeHeight = window.innerHeight - 70;
 		primeWidth = window.innerWidth - 50;
 		var total = 0;
-		for (var i = 0; i < primes.length; i++){
-			total += (primes[i][0] + 2);
+		switch (mode){
+			case 0:
+				for (var i = 0; i < Math.sqrt(num); i++){
+					total += (primes[i][0] + 2);
+				}
+				break;
+			case 1:
+				for (var i = 0; i < primes.length; i++){
+					total += (primes[i][0] + 2);
+				}
+				break;
+			case 2:
+				for (var i = 0; i < Math.sqrt(num); i++){
+					if ($.inArray((i+1), knownPrimes)) {
+						total += (primes[i][0] + 2);
+					}
+				}
+				break;
 		}
 		total = total - 1;
 		pRad = (primeWidth - 200)/total;
@@ -187,37 +205,99 @@ drawCanvas = function(num){
 			p.fill();
 		}
 	} else {
-		var w = pRad / 3;
-		var rectX = 30, rectY = w * 2;	
-		var s = pRad;
-		var size = 25 - Math.sqrt(num * 0.95);
-		p.font = size + "px Arial";
-		var textHeight = p.measureText('M').width;
-		//Run time - O(n^3 + n^2) (slow for large #s)
-		for (var i = 0; i < primes.length; i++){
-			for (var q = 0; q < primes[i][0]; q++){
-				for (var r = 0; r < primes[i][1]; r++){
-					p.fillStyle = z[q * z.length / primes[i][0] | 0];
-					p.beginPath();
-					p.arc(rectX + (q * s), rectY + (r * s), w, 0, v, !0);
-					p.fill();
-					p.closePath();
+		switch (mode){
+			case 0: 		
+				var w = pRad / 3;
+				var rectX = 30, rectY = w * 2;	
+				var s = pRad;
+				var size = 25 - Math.sqrt(num * 0.95);
+				p.font = size + "px Arial";
+				var textHeight = p.measureText('M').width;
+				//Run time - O(n^3 + n^2) (slow for large #s)
+				for (var i = 0; i < Math.sqrt(num); i++){
+					for (var q = 0; q < primes[i][0]; q++){
+						for (var r = 0; r < primes[i][1]; r++){
+							p.fillStyle = z[q * z.length / primes[i][0] | 0];
+							p.beginPath();
+							p.arc(rectX + (q * s), rectY + (r * s), w, 0, v, !0);
+							p.fill();
+							p.closePath();
+						}
+					}
+					if (num < 500){
+						p.fillStyle = "gray";
+						p.textAlign = "center";
+						var sumText = primes[i][0] + "×" + primes[i][1] + " + " + primes[i][2];
+						p.fillText(sumText, (rectX + ((primes[i][0] - 1) * s / 2)),(rectY + (primes[i][1] - 1) * s + 2 * w + textHeight));
+					}
+					for (var x = 0; x < primes[i][2]; x++){
+						p.fillStyle = "#FF0000";
+						p.beginPath();
+						p.arc(rectX + (primes[i][0] * s), rectY + (x * s), w, 0, v, !0);
+						p.fill();
+						p.closePath();
+					}
+					rectX = rectX + (primes[i][0] + 2) * s;
 				}
-			}
-			if (num < 500){
-				p.fillStyle = "gray";
-				p.textAlign = "center";
-				var sumText = primes[i][0] + "×" + primes[i][1] + " + " + primes[i][2];
-				p.fillText(sumText, (rectX + ((primes[i][0] - 1) * s / 2)),(rectY + (primes[i][1] - 1) * s + 2 * w + textHeight));
-			}
-			for (var x = 0; x < primes[i][2]; x++){
-				p.fillStyle = "#FF0000";
-				p.beginPath();
-				p.arc(rectX + (primes[i][0] * s), rectY + (x * s), w, 0, v, !0);
-				p.fill();
-				p.closePath();
-			}
-			rectX = rectX + (primes[i][0] + 2) * s;
+				break;
+			case 1:
+				var w = pRad / 3;
+				var rectX = 30, rectY = w * 2;	
+				var s = pRad;
+				//Run time - O(n^3 + n^2) (slow for large #s)
+				for (var i = 0; i < primes.length; i++){
+					for (var q = 0; q < primes[i][0]; q++){
+						for (var r = 0; r < primes[i][1]; r++){
+							p.fillStyle = z[q * z.length / primes[i][0] | 0];
+							p.beginPath();
+							p.arc(rectX + (q * s), rectY + (r * s), w, 0, v, !0);
+							p.fill();
+							p.closePath();
+						}
+					}
+					for (var x = 0; x < primes[i][2]; x++){
+						p.fillStyle = "#FF0000";
+						p.beginPath();
+						p.arc(rectX + (primes[i][0] * s), rectY + (x * s), w, 0, v, !0);
+						p.fill();
+						p.closePath();
+					}
+					rectX = rectX + (primes[i][0] + 2) * s;
+				}
+				break;
+			case 2:
+				var w = pRad / 3;
+				var rectX = 30, rectY = w * 2;	
+				var s = pRad;
+				//Run time - O(n^3 + n^2) (slow for large #s)
+				for (var i = 0; i < Math.sqrt(num); i++){
+					if ($.inArray((i + 2), knownPrimes) !== -1){
+						for (var q = 0; q < primes[i][0]; q++){
+							for (var r = 0; r < primes[i][1]; r++){
+								p.fillStyle = z[q * z.length / primes[i][0] | 0];
+								p.beginPath();
+								p.arc(rectX + (q * s), rectY + (r * s), w, 0, v, !0);
+								p.fill();
+								p.closePath();
+							}
+						}
+						if (num < 500){
+							p.fillStyle = "gray";
+							p.textAlign = "center";
+							var sumText = primes[i][0] + "×" + primes[i][1] + " + " + primes[i][2];
+							p.fillText(sumText, (rectX + ((primes[i][0] - 1) * s / 2)),(rectY + (primes[i][1] - 1) * s + 2 * w + textHeight));
+						}
+						for (var x = 0; x < primes[i][2]; x++){
+							p.fillStyle = "#FF0000";
+							p.beginPath();
+							p.arc(rectX + (primes[i][0] * s), rectY + (x * s), w, 0, v, !0);
+							p.fill();
+							p.closePath();
+						}
+						rectX = rectX + (primes[i][0] + 2) * s;
+					}
+				}
+				break;
 		}
 	}
 }

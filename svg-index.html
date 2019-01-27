@@ -5,24 +5,21 @@
 
 <title>Simple Factorization Diagrams</title>
 <link rel="stylesheet" href="factor.css">
+<script src="https://d3js.org/d3.v4.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script type="text/javascript" src="new.js"></script>
+<script type="text/javascript" src="svg-js.js"></script>
 <body>
 	<div>
 		<label for="uname">Number</label>
 		<input type="text" id="num" placeholder="Enter a number from 1 to 10000" style="width: 250px" />
 		<div id="status"></div>
 	</div>
-	<canvas width="300" height="300" id="canvas"></canvas>
 	<div id="credits">
 	Based on <a href="http://www.datapointed.net/2012/10/animated-factorization-diagrams/"  onclick="window.open(this.href);return false;">Animated Factorization Diagrams</a>
 	</div>
-	<button id="cexport" onclick="exportPDF()">Export as PDF </button>
+	<svg id="svgMain" xmlns="http://www.w3.org/2000/svg"> </svg>
+	<button id="cexport" onclick="exportSVG()">Export as SVG</button>
 </body>
-<!--Zooming Code From D3JS -->
-<script src="https://d3js.org/d3.v4.min.js"></script>
-<!--Generate PDF from jsPDF -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.4.1/jspdf.min.js"></script>
 <script>
 assignColors();
 document.querySelector('#num').addEventListener('keypress', function (e) {
@@ -32,20 +29,4 @@ document.querySelector('#num').addEventListener('keypress', function (e) {
       drawNum(); // code for enter
     }
 });
-
-//if (isPrime == true && currNum > 10){
-	var canvas = d3.select("canvas").call(d3.zoom().scaleExtent([1, 8]).on("zoom", zoom)),
-		context = canvas.node().getContext("2d"),
-		width = canvas.property("width"),
-		height = canvas.property("height");
-
-	function zoom() {
-	  var transform = d3.event.transform;
-	  p.save();
-	  p.clearRect(0, 0, width, height);
-	  p.translate(transform.x, transform.y);
-	  p.scale(transform.k, transform.k);
-	  drawCanvas(currNum);
-	  p.restore();
-	}
 </script>
