@@ -33,7 +33,7 @@ function N(a) {
     var b = O(a)
       , a = N(a / b);
     a.push(b);
-    return a
+    return a;
 }
 function O(a) {
     if (0 === a % 4)
@@ -43,7 +43,7 @@ function O(a) {
     for (var b = Math.sqrt(a) + 1 | 0, c = 3; c <= b; c += 2)
         if (0 === a % c)
             return c;
-    return a
+    return a;
 }
 function P(a, b) {
     var c;
@@ -89,7 +89,7 @@ var primeVis = false;
 var m, l;
 var k;
 var pRad;
-var mode = 2;
+var mode = 1;
 var knownPrimes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43];
 
 function Q(num) {
@@ -351,4 +351,14 @@ exportPDF = function(){
 	}
 }
 
+changeMode = function(){
+	if (isPrime == true) {
+		if (mode % 3 == 2){
+			mode = 0;
+		} else {
+			mode = mode + 1;
+		}
+	}
+	drawNum();
+}
     

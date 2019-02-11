@@ -94,9 +94,8 @@ function Q(num) {
 	currNum = num;
 	g = N(num);
 	isPrime = (1 >= g.length) //Known bug: 4 is prime
-	primeVis = (isPrime == true && num > 10);
+	primeVis = ((isPrime == true) && num > 10);
     var a, b = 0, c = a = 0, d = 0;
-    /*
 	if (primeVis){
 		primes = [];
 		primes = primeCombos(num);
@@ -106,15 +105,11 @@ function Q(num) {
 		for (var i = 0; i < primes.length; i++){
 			total += (primes[i][0] + 2);
 		}
+		console.log(primes);
 		total = total - 1;
 		pRad = (primeWidth - 200)/total;
 		pRad = Math.min(pRad, (primeHeight - 50)/(primes[0][1]));
-		maxWidth = (total * pRad) + 50;//change to + 50
-		primeWidth = Math.min(maxWidth, primeWidth);
-		var marginthing = -(primeWidth)/2;
-		var phmargin = -(primeHeight)/2;
-		var pwmargin = -(primeWidth)/2;
-	}*/
+	}
 	try {
         b = window.innerWidth
     } catch (i) {}
@@ -138,9 +133,10 @@ function Q(num) {
 	if (!primeVis){
 		width = e;
 		height = e;
+		m = height/2, l = width/2;
 	}
-	m = height/2, l = width/2;
-	drawSVG(currNum);
+	console.log(primes);
+	drawSVG(num);
 }
 
 drawSVG = function(num){
@@ -152,9 +148,14 @@ drawSVG = function(num){
 	}
 	factorization = document.getElementById("status");
 	factorization.innerHTML = P(num, g);
-	svg = d3.select("svg").attr("width", width)
-                          .attr("height", height);
-    svg.selectAll("*").remove();
+	if (!primeVis){
+		svg = d3.select("svg").attr("width", width)
+	                          .attr("height", height);
+	} else {
+		svg = d3.select("svg").attr("width", primeWidth)
+							  .attr("height", primeHeight);
+	}
+	svg.selectAll("*").remove();
     j = a.length;
 	s = 1 / j;
 	if (!primeVis){
@@ -166,7 +167,40 @@ drawSVG = function(num){
                         .attr("r", b[j])
                         .attr("fill", z[m * z.length | 0]);
 		}
-	} 
+	} else {
+		var w = pRad / 3;
+		var rectX = 30, rectY = w * 2;	
+		var s = pRad;
+		for (var i = 0; i < primes.length; i++){
+			for (var q = 0; q < primes[i][0]; q++){
+				for (var r = 0; r < primes[i][1]; r++){
+					var circle = svg.append("circle")
+					.attr("cx", rectX + (q * s))
+					.attr("cy", rectY + (r * s))
+					.attr("r", w)
+					.attr("fill", z[q * z.length / primes[i][0] | 0]);
+				}
+			}
+			if (num < 500){
+				svg.append("text")
+				.attr("dx", rectX + ((primes[i][0] - 1) * s / 2))
+				.attr("dy", rectY + (primes[i][1] - 1) * s + 2 * w + 10)
+				.attr("fill", "gray")
+				.attr("font-size", 20)
+				.style("font-family", "Arial Regular")
+				.style("text-anchor", "middle")
+				.text(primes[i][0] + "×" + primes[i][1] + " + " + primes[i][2]);
+			}
+			for (var x = 0; x < primes[i][2]; x++){
+				var remainder = svg.append("circle")
+				.attr("cx", rectX + (primes[i][0] * s))
+				.attr("cy", rectY + (x * s))
+				.attr("r", w)
+				.attr("fill", "red");
+			}
+			rectX = rectX + (primes[i][0] + 2) * s;
+		}
+	}
 }
 
 assignColors = function(){
