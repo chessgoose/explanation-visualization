@@ -50,7 +50,7 @@ function P(a, b) {
     if (1 > b.length)
         c = "";
     else if (1 >= b.length && 4 !== b[0])
-        c = "prime";
+        c = ("prime - " + numCircles);
     else {
         c = "";
 		for (var d = 0; d < b.length; d++) {
@@ -89,11 +89,13 @@ var primeVis = false;
 var m, l;
 var k;
 var pRad;
+var numCircles = 0;
 var mode = 1;
 var knownPrimes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43];
 
 function Q(num) {
 	currNum = num;
+	numCircles = 0;
 	g = N(num);
 	isPrime = (1 >= g.length) //Known bug: 4 is prime
 	primeVis = (isPrime == true && num > 10);
@@ -132,17 +134,20 @@ function Q(num) {
 			case 0:
 				for (var i = 0; i < Math.sqrt(num); i++){
 					total += (primes[i][0] + 2);
+					numCircles += currNum;
 				}
 				break;
 			case 1:
 				for (var i = 0; i < primes.length; i++){
 					total += (primes[i][0] + 2);
+					numCircles += currNum;
 				}
 				break;
 			case 2:
 				for (var i = 0; i < Math.sqrt(num); i++){
 					if ($.inArray((i+1), knownPrimes)) {
 						total += (primes[i][0] + 2);
+						numCircles += currNum;
 					}
 				}
 				break;
