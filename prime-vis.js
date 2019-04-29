@@ -66,7 +66,7 @@ var primes = [];
 
 primeCombos = function(num, mode){
 	var d = 2;
-	while (d < (num - 1)){        
+	while (d < Math.ceil(num/2)){        
 		var q = Math.floor(num / d);
 		var r = num % d;
 		var combo = [d, q, r];
@@ -219,7 +219,7 @@ drawCanvas = function(num){
 				p.font = size + "px Arial";
 				var textHeight = p.measureText('M').width;
 				//Run time - O(n^3 + n^2) (slow for large #s)
-				for (var i = 0; i < Math.sqrt(num); i++){
+				for (var i = 0; i < (Math.sqrt(num)-1); i++){
 					for (var q = 0; q < primes[i][0]; q++){
 						for (var r = 0; r < primes[i][1]; r++){
 							p.fillStyle = z[q * z.length / primes[i][0] | 0];

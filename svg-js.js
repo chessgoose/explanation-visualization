@@ -66,7 +66,7 @@ var primes = [];
 
 primeCombos = function(num){
 	var d = 2;
-	while (d*d <= num){        
+	while (d*d < num){        
 		var q = Math.floor(num / d);
 		var r = num % d;
 		var combo = [d, q, r];
@@ -96,20 +96,18 @@ function Q(num) {
 	isPrime = (1 >= g.length) //Known bug: 4 is prime
 	primeVis = ((isPrime == true) && num > 10);
     var a, b = 0, c = a = 0, d = 0;
-	if (primeVis){
-		primes = [];
-		primes = primeCombos(num);
-		primeHeight = window.innerHeight - 70;
-		primeWidth = window.innerWidth - 50;
-		var total = 0;
-		for (var i = 0; i < primes.length; i++){
-			total += (primes[i][0] + 2);
-		}
-		console.log(primes);
-		total = total - 1;
-		pRad = (primeWidth - 200)/total;
-		pRad = Math.min(pRad, (primeHeight - 50)/(primes[0][1]));
+	primes = [];
+	primes = primeCombos(num);
+	primeHeight = window.innerHeight - 70;
+	primeWidth = window.innerWidth - 50;
+	var total = 0;
+	for (var i = 0; i < primes.length; i++){
+		total += (primes[i][0] + 2);
 	}
+	console.log(primes);
+	total = total - 1;
+	pRad = (primeWidth - 200)/total;
+	pRad = Math.min(pRad, (primeHeight - 50)/(primes[0][1]));
 	try {
         b = window.innerWidth
     } catch (i) {}
@@ -159,14 +157,38 @@ drawSVG = function(num){
     j = a.length;
 	s = 1 / j;
 	if (!primeVis){
-		for (j -= 1; 0 <= j; j--) {
+		/*for (j -= 1; 0 <= j; j--) {
 			m = j * s;
 			var circle = svg.append("circle")
                         .attr("cx", a[j])
                         .attr("cy", d[j])
                         .attr("r", b[j])
                         .attr("fill", z[m * z.length | 0]);
-		}
+		}*/
+		var w = pRad/3;
+    	var p1, p2, f1 = 1;
+		var rectX = 30, rectY = w * 2;	
+
+	    while(f1 < num){
+	        var f2 = num / f1;
+	        if ( f2 == Math.floor(f2) ){
+	            p1 = f1; p2 = f2;
+	        }
+	        if ( f2 <= f1 ){
+	        	break;
+	        }
+	        f1++;
+	    }
+
+	    for (var i = 0; i < p1; i++){
+	    	for (var j = 0; j < p2; j++){
+	    		var circle = svg.append("circle")
+					.attr("cx", rectX + (i * pRad))
+					.attr("cy", rectY + (j * pRad))
+					.attr("r", w)
+					.attr("fill", z[z.length | 0]);
+	    	}
+	    }
 	} else {
 		var w = pRad / 3;
 		var rectX = 30, rectY = w * 2;	
@@ -202,6 +224,24 @@ drawSVG = function(num){
 		}
 	}
 }
+
+/*
+
+
+
+rects = svg.selectAll('rect')
+    .data(d3.range(20))
+    .enter()
+    .append('rect')
+    .attr('x',function(d,i) { return i * 25 })
+    .attr('y',0)
+    .attr('width',25)
+    .attr('height',500)
+    .attr('fill',function(d,i) { return color[i]; })
+
+*/
+
+// Draw a rectangle, and then create function of x and y to actually draw the ind. circles
 
 assignColors = function(){
 	t = Math.PI / 4;
